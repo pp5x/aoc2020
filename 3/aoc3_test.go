@@ -6,14 +6,20 @@ import (
 )
 
 type Fixture struct {
-	policyVal1 int
-	policyVal2 int
-	c          byte
-	password   []byte
-	expected   bool
+	rightIncr int
+	downIncr  int
+	expected  int
 }
 
 func TestIsPasswordValidPolicy1(t *testing.T) {
+	fixtures := []Fixture{
+		{1, 1, 2},
+		{3, 1, 7},
+		{5, 1, 3},
+		{7, 1, 4},
+		{1, 2, 2},
+	}
+
 	const rawArea = `..##.......
 #...#...#..
 .#....#..#.
@@ -27,9 +33,11 @@ func TestIsPasswordValidPolicy1(t *testing.T) {
 .#..#...#.#`
 
 	area := strings.Split(rawArea, "\n")
-	count := countAreaTrees(area)
+	for _, fixture := range fixtures {
+		count := countAreaTrees(area, fixture.rightIncr, fixture.downIncr)
 
-	if count != 7 {
-		t.Error(count, 7)
+		if count != fixture.expected {
+			t.Error(count, fixture.expected)
+		}
 	}
 }
